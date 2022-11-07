@@ -5,18 +5,20 @@ import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
 import Counter from "./Counter";
-import reducer from "./reducers";
+import { Provider } from "react-redux";
+import counterReducer from "./counterSlice";
 
+// !exp creates sagaMiddleware object
 const sagaMiddleware = createSagaMiddleware();
 
+// !exp using RTK to create store
 const store = configureStore({
-  reducer,
+  reducer: { counter: counterReducer },
   middleware: [sagaMiddleware],
 });
 
+// !exp runs all sagas
 sagaMiddleware.run(rootSaga);
-
-const action = (type) => store.dispatch({ type });
 
 const container = document.getElementById("root");
 // @ts-ignore
@@ -24,12 +26,9 @@ const root = createRoot(container);
 
 function render() {
   root.render(
-    <Counter
-      value={store.getState()}
-      onIncrement={() => action("INCREMENT")}
-      onDecrement={() => action("DECREMENT")}
-      onIncrementAsync={() => action("INCREMENT_ASYNC")}
-    />,
+    <Provider store={store}>
+      <Counter />
+    </Provider>,
   );
 }
 
