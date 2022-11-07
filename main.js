@@ -2,7 +2,7 @@ import "@babel/polyfill";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { legacy_createStore as createStore, applyMiddleware } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
 
@@ -11,7 +11,10 @@ import reducer from "./reducers";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const store = configureStore({
+  reducer,
+  middleware: [sagaMiddleware],
+});
 
 sagaMiddleware.run(rootSaga);
 
